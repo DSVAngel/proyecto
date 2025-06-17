@@ -1,0 +1,155 @@
+<!-- src/app/components/trending-sidebar/trending-sidebar.component.html -->
+
+<div class="main-content">
+
+  <!-- Tendencias musicales -->
+  <div class="card-music p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="gradient-text mb-0">
+        <i class="fas fa-fire me-2"></i>
+        Tendencias musicales
+      </h5>
+    </div>
+
+    <div class="trending-list">
+      <div *ngFor="let topic of trendingTopics; let i = index" class="trending-item">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="flex-grow-1">
+            <small class="text-muted d-block">{{ i + 1 }} · {{ topic.category }}</small>
+            <h6 class="mb-1 fw-bold">{{ topic.title }}</h6>
+            <small class="text-muted">{{ formatNumber(topic.tweets) }} tweets</small>
+          </div>
+          <button class="btn btn-sm">
+            <i class="fas fa-ellipsis-h text-muted"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recomendaciones musicales -->
+  <div class="card-music p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="gradient-text mb-0">
+        <i class="fas fa-headphones me-2"></i>
+        Música recomendada
+      </h5>
+
+    </div>
+
+    <div class="music-recommendations">
+      <div *ngFor="let rec of musicRecommendations" class="music-rec-item">
+        <div class="d-flex align-items-center">
+          <div class="rec-icon me-3">
+            <i [class]="rec.icon + ' fa-lg text-primary'"></i>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-0">{{ rec.song }}</h6>
+            <small class="text-muted">{{ rec.artist }}</small>
+            <div>
+              <span class="badge bg-secondary">{{ rec.genre }}</span>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-music">
+            <i class="fas fa-play"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Géneros populares -->
+  <div class="card-music p-3 mb-4">
+    <h5 class="gradient-text mb-3">
+      <i class="fas fa-compact-disc me-2"></i>
+      Géneros populares
+    </h5>
+
+    <div class="genre-tags">
+      <span class="badge genre-badge me-2 mb-2">#Pop</span>
+      <span class="badge genre-badge me-2 mb-2">#Rock</span>
+      <span class="badge genre-badge me-2 mb-2">#HipHop</span>
+      <span class="badge genre-badge me-2 mb-2">#Electronic</span>
+      <span class="badge genre-badge me-2 mb-2">#Jazz</span>
+      <span class="badge genre-badge me-2 mb-2">#Classical</span>
+      <span class="badge genre-badge me-2 mb-2">#Reggaeton</span>
+      <span class="badge genre-badge me-2 mb-2">#Country</span>
+    </div>
+  </div>
+
+  <!-- Eventos próximos -->
+  <div class="card-music p-3 mb-4">
+    <h5 class="gradient-text mb-3">
+      <i class="fas fa-calendar-alt me-2"></i>
+      Próximos eventos
+    </h5>
+
+    <div class="upcoming-events">
+      <div class="event-item">
+        <div class="d-flex align-items-center">
+          <div class="event-date me-3">
+            <div class="text-center">
+              <div class="fw-bold">25</div>
+              <small class="text-muted">JUN</small>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-0">Festival de Verano</h6>
+            <small class="text-muted">
+              <i class="fas fa-map-marker-alt me-1"></i>
+              Ciudad de México
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-item">
+        <div class="d-flex align-items-center">
+          <div class="event-date me-3">
+            <div class="text-center">
+              <div class="fw-bold">30</div>
+              <small class="text-muted">JUN</small>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-0">Concierto de Rock</h6>
+            <small class="text-muted">
+              <i class="fas fa-map-marker-alt me-1"></i>
+              Guadalajara
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-item">
+        <div class="d-flex align-items-center">
+          <div class="event-date me-3">
+            <div class="text-center">
+              <div class="fw-bold">05</div>
+              <small class="text-muted">JUL</small>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-0">Festival Electrónico</h6>
+            <small class="text-muted">
+              <i class="fas fa-map-marker-alt me-1"></i>
+              Monterrey
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-3">
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="sidebar-footer mt-4 px-3">
+    <div class="text-center">
+      <small class="text-muted">
+        © 2024 Usic
+      </small>
+    </div>
+  </div>
+</div>

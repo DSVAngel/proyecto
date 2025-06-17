@@ -1,0 +1,169 @@
+<!-- src/app/components/tweet-card/tweet-card.component.html -->
+
+<div class="tweet-card fade-in">
+  <!-- Header del tweet -->
+  <div class="tweet-header">
+    <div class="user-avatar">
+      {{ getUserInitials(tweet.postedBy) }}
+    </div>
+
+    <div class="tweet-info">
+      <div class="user-info">
+        <div class="user-details">
+          <h6 class="username">{{ tweet.postedBy.username }}</h6>
+          <span class="tweet-time">
+            🕐 {{ getTimeAgo(tweet.createdAt) }}
+            <span *ngIf="tweet.edited" class="edited-badge" title="Editado">
+              ✏
+            </span>
+          </span>
+        </div>
+
+        <!-- Menú de opciones -->
+        <div class="tweet-menu" *ngIf="canEdit()">
+          <button class="menu-btn" (click)="toggleMenu()" #menuButton>
+            ⋯
+          </button>
+          <div class="dropdown-menu" *ngIf="showMenu" #dropdownMenu>
+            <button class="dropdown-item" (click)="startEdit(); hideMenu()">
+              ✏ Editar
+            </button>
+            <button class="dropdown-item danger" (click)="deleteTweet(); hideMenu()">
+              🗑 Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido del tweet -->
+      <div class="tweet-content">
+        <div *ngIf="!isEditing">
+          <p class="tweet-text">{{ tweet.tweet }}</p>
+        </div>
+
+        <!-- Modo edición -->
+        <div *ngIf="isEditing" class="edit-mode">
+          <textarea
+            class="edit-textarea"
+            [(ngModel)]="editContent"
+            rows="3"
+            maxlength="140"
+            placeholder="Edita tu tweet..."></textarea>
+          <div class="edit-footer">
+            <span class="char-count"
+                  [class.warning]="editContent.length > 120"
+                  [class.danger]="editContent.length > 140">
+              {{ editContent.length }}/140
+            </span>
+            <div class="edit-actions">
+              <button class="btn btn-cancel" (click)="cancelEdit()">
+                Cancelar
+              </button>
+              <button
+                class="btn btn-save"
+                (click)="saveEdit()"
+                [disabled]="!editContent.trim() || editContent.length > 140 || isLoading">
+                <span *ngIf="isLoading" class="spinner-border"></span>
+                {{ isLoading ? 'Guardando...' : 'Guardar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reacciones y acciones -->
+  <div class="tweet-actions-section" *ngIf="!isEditing">
+    <!-- Selector de emojis -->
+    <div class="reactions-section" *ngIf="reactions.length > 0">
+      <div class="emoji-selector">
+        <button
+          *ngFor="let reaction of reactions"
+          class="emoji-btn"
+          [class.active]="userReaction?.reaction?.id === reaction.id"
+          (click)="toggleReaction(reaction)"
+          [title]="reaction.description">
+          {{ reaction.emoji }}
+          <span *ngIf="reactionCounts[reaction.id]" class="reaction-count">
+            {{ reactionCounts[reaction.id] }}
+          </span>
+        </button>
+      </div>
+
+      <div *ngIf="getTotalReactions() > 0" class="reactions-info">
+        {{ getTotalReactions() }} reacciones
+      </div>
+    </div>
+
+    <!-- Botones de acción principales -->
+    <div class="main-actions">
+      <button class="action-btn" (click)="toggleComments()">
+        <span class="action-icon">💬</span>
+        <span class="action-text">{{ comments.length }}</span>
+      </button>
+
+      <button class="action-btn">
+        <span class="action-icon">↗</span>
+        <span class="action-text">Compartir</span>
+      </button>
+
+      <button class="action-btn">
+        <span class="action-icon">🔖</span>
+        <span class="action-text">Guardar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sección de comentarios -->
+  <div *ngIf="showComments" class="comments-section">
+    <!-- Crear comentario -->
+    <div *ngIf="currentUser" class="create-comment">
+      <div class="comment-form">
+        <div class="comment-avatar">
+          {{ getUserInitials(currentUser) }}
+        </div>
+        <div class="comment-input-container">
+          <textarea
+            class="comment-textarea"
+            rows="2"
+            placeholder="Escribe un comentario musical..."
+            [(ngModel)]="newCommentContent"
+            maxlength="500"></textarea>
+          <div class="comment-footer">
+            <span class="comment-char-count">{{ newCommentContent.length }}/500</span>
+            <button
+              class="btn btn-comment"
+              (click)="addComment()"
+              [disabled]="!newCommentContent.trim()">
+              ✈ Comentar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de comentarios -->
+    <div class="comments-list">
+      <div *ngFor="let comment of comments" class="comment-item">
+        <div class="comment-form">
+          <div class="comment-avatar">
+            {{ getUserInitials(comment.user) }}
+          </div>
+          <div class="comment-bubble">
+            <div class="comment-header">
+              <span class="comment-username">{{ comment.user.username }}</span>
+              <span class="comment-time">{{ getTimeAgo(comment.createdAt) }}</span>
+            </div>
+            <p class="comment-content">{{ comment.content }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="comments.length === 0" class="no-comments">
+        <div class="no-comments-icon">💬</div>
+        <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+      </div>
+    </div>
+  </div>
+</div>

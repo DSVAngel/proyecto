@@ -1,0 +1,111 @@
+<!-- src/app/components/home/home.component.html -->
+
+<div class="container-fluid home-container">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 p-0">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col-md-6">
+      <div class="main-content">
+        <!-- Header de bienvenida -->
+        <div class="welcome-card">
+          <div class="d-flex align-items-center">
+            <div class="user-avatar me-3">
+              {{ getUserInitials(currentUser!) }}
+            </div>
+            <div class="flex-grow-1">
+              <h4 class="mb-1 gradient-text">¡Hola, {{ currentUser?.username }}!</h4>
+              <p class="text-muted mb-0">¿Qué música estás escuchando hoy?</p>
+            </div>
+            <div class="ms-auto">
+              <span style="font-size: 2rem;">🎧</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Crear nuevo tweet -->
+        <div class="create-tweet-card">
+          <div class="d-flex">
+            <div class="user-avatar me-3">
+              {{ getUserInitials(currentUser!) }}
+            </div>
+            <div class="flex-grow-1">
+              <textarea
+                class="tweet-textarea"
+                rows="3"
+                placeholder="¡Comparte tu canción favorita, una reseña de un concierto, o cualquier pensamiento musical!"
+                [(ngModel)]="newTweetContent"
+                maxlength="140"></textarea>
+
+              <div class="tweet-footer">
+                <div class="char-count"
+                     [class.warning]="newTweetContent.length > 120"
+                     [class.danger]="newTweetContent.length > 140">
+                  {{ newTweetContent.length }}/140 caracteres
+                </div>
+                <button
+                  class="btn btn-tweet"
+                  (click)="createTweet()"
+                  [disabled]="!newTweetContent.trim() || isLoading || newTweetContent.length > 140">
+                  <span *ngIf="isLoading" class="spinner-border me-2"></span>
+                  {{ isLoading ? 'Publicando...' : '♪ Publicar' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de tweets -->
+        <div class="tweets-section">
+          <div *ngIf="isLoadingTweets && tweets.length === 0" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="text-muted">Cargando tweets musicales...</p>
+          </div>
+
+          <div *ngFor="let tweet of tweets; trackBy: trackByTweetId" class="tweet-item">
+            <app-tweet-card
+              [tweet]="tweet"
+              [reactions]="reactions"
+              [currentUser]="currentUser"
+              (tweetUpdated)="onTweetUpdated($event)"
+              (tweetDeleted)="onTweetDeleted($event)">
+            </app-tweet-card>
+          </div>
+
+          <!-- Botón cargar más -->
+          <div *ngIf="hasMorePages" class="load-more-container">
+            <button
+              class="btn btn-load-more"
+              (click)="loadMoreTweets()"
+              [disabled]="isLoadingTweets">
+              <span *ngIf="isLoadingTweets" class="spinner-border me-2"></span>
+              {{ isLoadingTweets ? 'Cargando...' : '⌄ Cargar más tweets' }}
+            </button>
+          </div>
+
+          <!-- Mensaje cuando no hay más tweets -->
+          <div *ngIf="!hasMorePages && tweets.length > 0" class="text-center mt-4">
+            <p class="text-muted">
+              ♪ ¡Has visto todos los tweets musicales!
+            </p>
+          </div>
+
+          <!-- Mensaje cuando no hay tweets -->
+          <div *ngIf="tweets.length === 0 && !isLoadingTweets" class="empty-state">
+            <div class="empty-icon">♪</div>
+            <h5 class="text-muted">No hay tweets aún</h5>
+            <p class="text-muted">¡Sé el primero en compartir algo musical!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar derecho - Tendencias musicales -->
+    <div class="col-md-3">
+      <app-trending-sidebar></app-trending-sidebar>
+    </div>
+  </div>
+</div>
