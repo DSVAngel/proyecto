@@ -30,11 +30,38 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
+    this.loadReactions(); // Cargar reacciones primero
     this.loadTweets();
-    this.loadReactions();
-
-    // Initialize reactions if needed
     this.initializeReactions();
+  }
+
+  loadReactions(): void {
+    console.log('Loading reactions...');
+    this.reactionService.getAllReactionTypes().subscribe({
+      next: (reactions) => {
+        console.log('Reactions loaded:', reactions);
+        this.reactions = reactions;
+      },
+      error: (error) => {
+        console.error('Error loading reactions:', error);
+        // Si no hay reacciones, inicializarlas
+        this.initializeReactions();
+      }
+    });
+  }
+
+  initializeReactions(): void {
+    console.log('Initializing reactions...');
+    this.reactionService.initializeDefaultReactions().subscribe({
+      next: (response) => {
+        console.log('Reactions initialized:', response);
+        // Recargar las reacciones después de inicializarlas
+        this.loadReactions();
+      },
+      error: (error) => {
+        console.error('Error initializing reactions:', error);
+      }
+    });
   }
 
   loadTweets(page: number = 0): void {
@@ -58,30 +85,6 @@ export class HomeComponent implements OnInit {
         this.isLoadingTweets = false;
       }
     });
-  }
-
-  loadReactions(): void {
-    this.reactionService.getAllReactionTypes().subscribe({
-      next: (reactions) => {
-        this.reactions = reactions;
-      },
-      error: (error) => {
-        console.error('Error loading reactions:', error);
-      }
-    });
-  }
-
-  initializeReactions(): void {
-    if (this.authService.isAdmin()) {
-      this.reactionService.initializeDefaultReactions().subscribe({
-        next: (response) => {
-          console.log('Reactions initialized:', response);
-        },
-        error: (error) => {
-          console.error('Error initializing reactions:', error);
-        }
-      });
-    }
   }
 
   createTweet(): void {

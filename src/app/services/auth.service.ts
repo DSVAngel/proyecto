@@ -1,10 +1,11 @@
 // src/app/services/auth.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { JwtResponse, LoginRequest, SignupRequest, MessageResponse, User } from '../models/models';
+import { environment } from '../../environments/environment';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -13,7 +14,7 @@ const USER_KEY = 'auth-user';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -28,6 +29,24 @@ export class AuthService {
     }
   }
 
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Server-side error
+      if (error.error && error.error.message) {
+        errorMessage = error.error.message;
+      } else {
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      }
+      console.error('Error details:', error.error);
+    }
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
+  }
+
   login(loginRequest: LoginRequest): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(`${this.apiUrl}/signin`, loginRequest, this.httpOptions)
       .pipe(
@@ -40,12 +59,14 @@ export class AuthService {
           };
           this.saveUser(user);
           this.currentUserSubject.next(user);
-        })
+        }),
+        catchError(this.handleError)
       );
   }
 
   register(signupRequest: SignupRequest): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(`${this.apiUrl}/signup`, signupRequest, this.httpOptions);
+    return this.http.post<MessageResponse>(`${this.apiUrl}/signup`, signupRequest, this.httpOptions)
+      .pipe(catchError(this.handleError));
   }
 
   logout(): void {

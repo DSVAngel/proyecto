@@ -5,12 +5,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Comment, CommentRequest, PaginatedResponse, MessageResponse } from '../models/models';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
-  private apiUrl = 'http://localhost:8080/api/comments';
+  private apiUrl = environment.apiUrl + '/comments';
 
   constructor(
     private http: HttpClient,

@@ -57,6 +57,8 @@ export class RegisterComponent implements OnInit {
         password: this.registerForm.value.password
       };
 
+      console.log('Sending registration request:', signupRequest);
+
       this.authService.register(signupRequest).subscribe({
         next: (response) => {
           console.log('Registration successful:', response);
@@ -69,6 +71,10 @@ export class RegisterComponent implements OnInit {
           console.error('Registration error:', error);
           if (error.error?.message) {
             this.errorMessage = error.error.message;
+          } else if (error.error?.error) {
+            this.errorMessage = error.error.error;
+          } else if (error.message) {
+            this.errorMessage = error.message;
           } else {
             this.errorMessage = 'Error al crear la cuenta. Por favor, intenta de nuevo.';
           }

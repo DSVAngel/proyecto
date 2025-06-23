@@ -10,7 +10,7 @@
     <div class="tweet-info">
       <div class="user-info">
         <div class="user-details">
-          <h6 class="username">{{ tweet.postedBy.username }}</h6>
+          <h6 class="username">{{ tweet.postedBy?.username || 'Usuario desconocido' }}</h6>
           <span class="tweet-time">
             🕐 {{ getTimeAgo(tweet.createdAt) }}
             <span *ngIf="tweet.edited" class="edited-badge" title="Editado">
@@ -76,17 +76,18 @@
   <!-- Reacciones y acciones -->
   <div class="tweet-actions-section" *ngIf="!isEditing">
     <!-- Selector de emojis -->
-    <div class="reactions-section" *ngIf="reactions.length > 0">
+    <div class="reactions-section" *ngIf="hasReactions()">
       <div class="emoji-selector">
         <button
           *ngFor="let reaction of reactions"
           class="emoji-btn"
-          [class.active]="userReaction?.reaction?.id === reaction.id"
+          [class.active]="isReactionActive(reaction)"
           (click)="toggleReaction(reaction)"
-          [title]="reaction.description">
+          [title]="reaction.description"
+          [attr.aria-label]="reaction.description">
           {{ reaction.emoji }}
-          <span *ngIf="reactionCounts[reaction.id]" class="reaction-count">
-            {{ reactionCounts[reaction.id] }}
+          <span *ngIf="getReactionCount(reaction) > 0" class="reaction-count">
+            {{ getReactionCount(reaction) }}
           </span>
         </button>
       </div>
@@ -94,6 +95,11 @@
       <div *ngIf="getTotalReactions() > 0" class="reactions-info">
         {{ getTotalReactions() }} reacciones
       </div>
+    </div>
+
+    <!-- Mensaje de debug (temporal - quitar en producción) -->
+    <div *ngIf="!hasReactions()" class="debug-info" style="color: #F59E0B; font-size: 0.8rem; margin-bottom: 1rem;">
+      ⚠ No se han cargado las reacciones. Reacciones disponibles: {{ reactions.length || 0 }}
     </div>
 
     <!-- Botones de acción principales -->

@@ -5,12 +5,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tweet, PaginatedResponse, MessageResponse } from '../models/models';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TweetService {
-  private apiUrl = 'http://localhost:8080/api/tweets';
+  private apiUrl = `${environment.apiUrl}/tweets`;
 
   constructor(
     private http: HttpClient,

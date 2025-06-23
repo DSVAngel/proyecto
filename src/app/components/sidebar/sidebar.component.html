@@ -18,33 +18,7 @@
       </div>
     </a>
 
-    <a class="nav-item" routerLink="/explore" routerLinkActive="active">
-      <div class="nav-item-content">
-        <span class="nav-icon">🧭</span>
-        <span class="nav-text">Explorar</span>
-      </div>
-    </a>
-
-    <a class="nav-item" routerLink="/notifications" routerLinkActive="active">
-      <div class="nav-item-content">
-        <span class="nav-icon">🔔</span>
-        <span class="nav-text">Notificaciones</span>
-      </div>
-    </a>
-
-    <a class="nav-item" routerLink="/messages" routerLinkActive="active">
-      <div class="nav-item-content">
-        <span class="nav-icon">✉</span>
-        <span class="nav-text">Mensajes</span>
-      </div>
-    </a>
-
-    <a class="nav-item" routerLink="/bookmarks" routerLinkActive="active">
-      <div class="nav-item-content">
-        <span class="nav-icon">🔖</span>
-        <span class="nav-text">Guardados</span>
-      </div>
-    </a>
+    
 
     <a class="nav-item" routerLink="/profile" routerLinkActive="active">
       <div class="nav-item-content">
@@ -54,46 +28,7 @@
     </a>
   </nav>
 
-  <!-- Sección musical especial -->
-  <div class="sidebar-section">
-    <h6 class="section-title">
-      🎧 Musical
-    </h6>
-    <nav class="sidebar-nav">
-      <a class="nav-item" routerLink="/playlists" routerLinkActive="active">
-        <div class="nav-item-content">
-          <span class="nav-icon">📋</span>
-          <span class="nav-text">Mis Playlists</span>
-        </div>
-      </a>
 
-      <a class="nav-item" routerLink="/concerts" routerLinkActive="active">
-        <div class="nav-item-content">
-          <span class="nav-icon">📅</span>
-          <span class="nav-text">Conciertos</span>
-        </div>
-      </a>
-
-      <a class="nav-item" routerLink="/artists" routerLinkActive="active">
-        <div class="nav-item-content">
-          <span class="nav-icon">🎤</span>
-          <span class="nav-text">Artistas Seguidos</span>
-        </div>
-      </a>
-
-      <a class="nav-item" routerLink="/genres" routerLinkActive="active">
-        <div class="nav-item-content">
-          <span class="nav-icon">💿</span>
-          <span class="nav-text">Géneros</span>
-        </div>
-      </a>
-    </nav>
-  </div>
-
-  <!-- Botón de crear tweet -->
-  <button class="create-tweet-btn" (click)="navigateTo('/home')">
-    + Nuevo Tweet Musical
-  </button>
 
   <!-- Perfil del usuario -->
   <div class="user-profile" *ngIf="currentUser">
